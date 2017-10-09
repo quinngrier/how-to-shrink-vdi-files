@@ -4,7 +4,7 @@
 
     sudo bash -c '
       set -e -o pipefail
-      apt install zerofree
+      apt-get -y install zerofree
       cp /etc/fstab /etc/fstab.original
       sed -i '\''/[^#].* \/ /s/[^ ][^ ]*\(  *[^ ][^ ]*  *[^ ][^ ]*\)$/ro\1/'\'' /etc/fstab
       shutdown -r now
