@@ -7,8 +7,8 @@
       apt-get -y install zerofree
       cp /etc/fstab /etc/fstab.original
       sed -i '\''/[^#].* \/ /s/[^ ][^ ]*\(  *[^ ][^ ]*  *[^ ][^ ]*\)$/ro\1/'\'' /etc/fstab
-      shutdown -r now
     '
+    sudo shutdown -r now
 
     sudo bash -c '
       set -e -o pipefail
@@ -16,8 +16,8 @@
       /usr/sbin/zerofree -v $d
       mount -o remount,rw $d /
       mv /etc/fstab.original /etc/fstab
-      shutdown -h now
     '
+    sudo shutdown -h now
 
     "C:\Program Files\Oracle\VirtualBox\VBoxManage.exe" modifyhd "C:\foo\bar.vdi" --compact
 
