@@ -10,7 +10,7 @@
 
 = How to shrink VDI files
 
-== On a Windows host and single-VDI Debian guest
+== On a Windows host and a single-VDI Debian guest
 
 . Make a backup copy of the `.vdi` file in case something goes wrong.
 
@@ -28,8 +28,9 @@ sudo bash -c '
 '
 ----
 
-. Run the following command on the guest to zero all unallocated blocks
-in the filesystem, undo the read-only marking, and shut down:
+. After the guest reboots, run the following command on the guest to
+zero all unallocated blocks in the filesystem, undo the read-only
+marking, and shut down:
 +
 [source,bash]
 ----
