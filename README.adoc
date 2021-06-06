@@ -1,53 +1,71 @@
+//
+// The authors of this file have waived all copyright and
+// related or neighboring rights to the extent permitted by
+// law as described by the CC0 1.0 Universal Public Domain
+// Dedication. You should have received a copy of the full
+// dedication along with this file, typically as a file
+// named <CC0-1.0.txt>. If not, it may be available at
+// <https://creativecommons.org/publicdomain/zero/1.0/>.
+//
+
 = How to shrink VDI files
 
-== On a Windows host and Debian guest
+== On a Windows host and single-VDI Debian guest
 
-[source]
+. Make a backup copy of the `.vdi` file in case something goes wrong.
+
+. Run the following command on the guest to temporarily mark the
+filesystem as read-only and reboot:
++
+[source,bash]
 ----
 sudo bash -c '
-  set -e -o pipefail
-  apt-get -y install zerofree
+  set -e -o pipefail -x || exit
+  apt-get -q -y install zerofree
   cp /etc/fstab /etc/fstab.original
-  sed -i '\''/[^#].* \/ /s/[^ ][^ ]*\(  *[^ ][^ ]*  *[^ ][^ ]*\)$/ro\1/'\'' /etc/fstab
+  sed -i '\''/^[^#]* \/ /s/[^ ][^ ]*\(  *[^ ][^ ]*  *[^ ][^ ]*\)$/ro\1/'\'' /etc/fstab
+  shutdown -r now || :
 '
-sudo shutdown -r now
 ----
 
-[source]
+. Run the following command on the guest to zero all unallocated blocks
+in the filesystem, undo the read-only marking, and shut down:
++
+[source,bash]
 ----
 sudo bash -c '
-  set -e -o pipefail
-  d=$(df | grep /\$ | cut -d \  -f 1)
+  set -e -o pipefail -x || exit
+  d=$(df | grep /\$ | cut -d " " -f 1)
   /usr/sbin/zerofree -v $d
   mount -o remount,rw $d /
   mv /etc/fstab.original /etc/fstab
+  shutdown -h now || :
 '
-sudo shutdown -h now
 ----
 
-[source]
+. After the guest shuts down, run the following command on the host to
+shrink the `.vdi` file, adjusting the path to the `.vdi` file as needed:
++
+[source,cmd]
 ----
 "C:\Program Files\Oracle\VirtualBox\VBoxManage.exe" modifyhd "C:\foo\bar.vdi" --compact
 ----
-
-[source]
-----
++
+You might receive an error that looks like this:
++
+[literal]
+....
 VBoxManage.exe: error: Cannot register the hard disk 'C:\foo\bar.vdi' {54f7214a-95c9-1e7b-2ac5-8a605e078c54} because a hard disk 'D:\baz\bar.vdi' with UUID {54f7214a-95c9-1e7b-2ac5-8a605e078c54} already exists
 VBoxManage.exe: error: Details: code E_INVALIDARG (0x80070057), component VirtualBoxWrap, interface IVirtualBox, callee IUnknown
 VBoxManage.exe: error: Context: "OpenMedium(Bstr(pszFilenameOrUuid).raw(), enmDevType, enmAccessMode, fForceNewUuidOnOpen, pMedium.asOutParam())" at line 179 of file VBoxManageDisk.cpp
+....
++
+If so, run the same command again, except replacing the path to the
+`.vdi` file with the brace-enclosed UUID shown in the error message:
++
+[source,cmd]
+----
+"C:\Program Files\Oracle\VirtualBox\VBoxManage.exe" modifyhd "{54f7214a-95c9-1e7b-2ac5-8a605e078c54}" --compact
 ----
 
-[source]
-----
-"C:\Program Files\Oracle\VirtualBox\VBoxManage.exe" modifyhd {54f7214a-95c9-1e7b-2ac5-8a605e078c54} --compact
-----
-
-== Copyright notice
-
-The authors of this file have waived all copyright and
-related or neighboring rights to the extent permitted by
-law as described by the CC0 1.0 Universal Public Domain
-Dedication. You should have received a copy of the full
-dedication along with this file, typically as a file
-named `CC0-1.0.txt`. If not, it may be available at
-link:https://creativecommons.org/publicdomain/zero/1.0/[].
+//
