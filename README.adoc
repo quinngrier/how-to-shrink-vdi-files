@@ -40,7 +40,7 @@ sudo bash -c '
   d=$(df | grep /\$ | cut -d " " -f 1)
   /usr/sbin/zerofree -v $d
   mount -o remount,rw $d /
-  mv /etc/fstab.original /etc/fstab
+  mv -f /etc/fstab.original /etc/fstab
   shutdown -h now || :
 '
 ----
