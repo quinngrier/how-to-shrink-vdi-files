@@ -12,10 +12,11 @@
 
 == On a Windows host and a single-VDI Debian guest
 
-. Make a backup copy of the `.vdi` file in case something goes wrong.
+. Shut down the guest and make a backup copy of the `.vdi` file in case
+something goes wrong.
 
-. Run the following command on the guest to temporarily mark the
-filesystem as read-only and reboot:
+. Start the guest and run the following command on the guest to
+temporarily mark the filesystem as read-only and reboot:
 +
 [source,bash]
 ----
@@ -44,8 +45,9 @@ sudo bash -c '
 '
 ----
 
-. After the guest shuts down, run the following command on the host to
-shrink the `.vdi` file, adjusting the path to the `.vdi` file as needed:
+. After the guest shuts down, run the following command on the host,
+adjusting the path to the `.vdi` file as needed, to shrink the `.vdi`
+file:
 +
 [source,cmd]
 ----
