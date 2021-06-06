@@ -12,7 +12,7 @@
 
 == On a Windows host and a single-VDI Debian guest
 
-. Shut down the guest and make a backup copy of the VDI file in case
+. Shut down the guest and make a backup copy of the `.vdi` file in case
 something goes wrong.
 
 . Start the guest and run the following command on the guest to
@@ -46,8 +46,8 @@ sudo bash -c '
 ----
 
 . After the guest shuts down, run the following command on the host,
-adjusting the paths to `VBoxManage.exe` and the VDI file as needed, to
-shrink the VDI file:
+adjusting the paths to `VBoxManage.exe` and the `.vdi` file as needed,
+to shrink the `.vdi` file:
 +
 [source,cmd]
 ----
@@ -63,8 +63,8 @@ VBoxManage.exe: error: Details: code E_INVALIDARG (0x80070057), component Virtua
 VBoxManage.exe: error: Context: "OpenMedium(Bstr(pszFilenameOrUuid).raw(), enmDevType, enmAccessMode, fForceNewUuidOnOpen, pMedium.asOutParam())" at line 179 of file VBoxManageDisk.cpp
 ....
 +
-If so, run the same command again, except replacing the path to the VDI
-file with the brace-enclosed UUID shown in the error message:
+If so, run the same command again, except replacing the path to the
+`.vdi` file with the brace-enclosed UUID shown in the error message:
 +
 [source,cmd]
 ----
